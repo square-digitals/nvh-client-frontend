@@ -92,27 +92,27 @@ First authenticated page.
 ## Phase 5 — Services
 
 ### Services List — `/services`
-- [ ] `GET /api/services` on mount with skeleton loader
-- [ ] Segmented tab filter: All / Active / Provisioning / Pending / Suspended / Terminated
-- [ ] Table: name, domain, type, status badge, created date, actions
-- [ ] Empty state when no services
-- [ ] "Request Service" button → `/services/new`
+- [x] `GET /api/services` on mount with skeleton loader
+- [x] Segmented tab filter: All / Active / Provisioning / Pending / Suspended / Terminated
+- [x] Table: name, domain, type, status badge, created date, actions
+- [x] Empty state when no services
+- [x] "Request Service" button → `/services/new`
 
 ### New Service — `/services/new`
-- [ ] Fields: name, domain, type (defaults to `wordpress`)
-- [ ] `POST /api/services`
-- [ ] On 201 → redirect to `/services/[id]`
-- [ ] On 422 → inline field errors (especially domain validation)
+- [x] Fields: name, domain, type (defaults to `wordpress`)
+- [x] `POST /api/services`
+- [x] On 201 → redirect to `/services/[id]`
+- [x] On 422 → inline field errors (especially domain validation)
 
 ### Service Detail — `/services/[id]`
-- [ ] `GET /api/services/{id}` on mount
-- [ ] Show all fields in a detail card
-- [ ] Status badge matching the service lifecycle table
-- [ ] If status is `pending_approval` or `provisioning` → start polling every 30s, stop on terminal status
-- [ ] Show `service.url` as a live link when `active`
-- [ ] Show `failed_reason` when `failed` or `rejected`
-- [ ] "Terminate" button (visible when not already terminated/rejected) → confirm modal → `DELETE /api/services/{id}`
-- [ ] On terminate success → update status to `terminated` in local state
+- [x] `GET /api/services/{id}` on mount
+- [x] Show all fields in a detail card
+- [x] Status badge matching the service lifecycle table
+- [x] If status is `pending_approval` or `provisioning` → start polling every 30s, stop on terminal status
+- [x] Show `service.url` as a live link when `active`
+- [x] Show `failed_reason` when `failed` or `rejected`
+- [x] "Terminate" button (visible when not already terminated/rejected) → confirm modal → `DELETE /api/services/{id}`
+- [x] On terminate success → update status to `terminated` in local state
 
 ---
 
