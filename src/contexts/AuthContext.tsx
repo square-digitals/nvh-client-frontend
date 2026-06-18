@@ -3,7 +3,6 @@
 import { createContext, useContext, useState } from 'react'
 import type { Client } from '@/types'
 import { api } from '@/lib/api'
-import { csrfStore } from '@/lib/csrfStore'
 
 interface AuthContextValue {
   client: Client | null
@@ -22,7 +21,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } catch {
       // proceed regardless
     }
-    csrfStore.clear()
     setClient(null)
     window.location.href = '/login'
   }
