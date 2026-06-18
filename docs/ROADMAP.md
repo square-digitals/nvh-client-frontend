@@ -27,12 +27,12 @@ Set up everything that every page depends on before writing a single page.
 
 Set up the routing skeleton so pages have a home before they are built.
 
-- [ ] Create `app/(auth)/layout.tsx` — bare layout (no sidebar), `bg-slate-50`
-- [ ] Create `app/(portal)/layout.tsx` — authenticated shell with `<Sidebar>` + `<Topbar>`, wraps `AuthContext`
-- [ ] Build `components/Sidebar.tsx` — `bg-brand-950`, nav links for Dashboard / Services / Billing, logo mark
-- [ ] Build `components/Topbar.tsx` — page title slot, user avatar/name, logout button
-- [ ] Add route guard to `(portal)/layout.tsx` — call `GET /api/auth/me` on mount; redirect to `/login` on 401
-- [ ] Create placeholder pages for all routes (return `null` or a heading) so navigation works end-to-end
+- [x] Create `app/(auth)/layout.tsx` — bare layout (no sidebar), `bg-slate-50`
+- [x] Create `app/(portal)/layout.tsx` — authenticated shell with `<Sidebar>` + `<Topbar>`, wraps `AuthContext`
+- [x] Build `components/Sidebar.tsx` — `bg-brand-950`, nav links for Dashboard / Services / Billing, logo mark
+- [x] Build `components/Topbar.tsx` — page title slot, user avatar/name, logout button
+- [x] Add route guard to `(portal)/layout.tsx` — call `GET /api/auth/me` on mount; redirect to `/login` on 401
+- [x] Create placeholder pages for all routes (return `null` or a heading) so navigation works end-to-end
 
 ---
 
