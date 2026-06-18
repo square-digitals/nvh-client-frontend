@@ -119,15 +119,15 @@ First authenticated page.
 ## Phase 6 — Billing (Invoices)
 
 ### Invoices List — `/billing`
-- [ ] `GET /api/invoices` on mount with skeleton loader
-- [ ] Tab filter: All / Unpaid / Paid / Overdue / Void
-- [ ] Table: external ID, amount (formatted NGN), period, due date, status badge
-- [ ] Empty state when no invoices
+- [x] `GET /api/invoices` on mount with skeleton loader
+- [x] Tab filter: All / Unpaid / Paid / Overdue / Void
+- [x] Table: external ID, amount (formatted NGN), period, due date, status badge
+- [x] Empty state when no invoices
 
 ### Invoice Detail — `/billing/[id]`
-- [ ] `GET /api/invoices/{id}` on mount
-- [ ] Detail card: all fields, formatted amount and dates
-- [ ] Status badge
+- [x] `GET /api/invoices/{id}` on mount
+- [x] Detail card: all fields, formatted amount and dates
+- [x] Status badge
 
 ---
 
