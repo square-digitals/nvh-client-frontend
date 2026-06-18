@@ -41,38 +41,38 @@ Set up the routing skeleton so pages have a home before they are built.
 Public pages. No auth required.
 
 ### Register — `/register`
-- [ ] Two-column layout (dark brand panel left, form right)
-- [ ] Fields: name, email, password, password_confirmation
-- [ ] `POST /api/auth/register` on submit
-- [ ] On 201 → redirect to `/verify-email`
-- [ ] On 422 → map field errors inline
-- [ ] Loading spinner on button while submitting
+- [x] Two-column layout (dark brand panel left, form right)
+- [x] Fields: name, email, password, password_confirmation
+- [x] `POST /api/auth/register` on submit
+- [x] On 201 → redirect to `/verify-email`
+- [x] On 422 → map field errors inline
+- [x] Loading spinner on button while submitting
 
 ### Login — `/login`
-- [ ] Same two-column layout
-- [ ] Fields: email, password
-- [ ] `POST /api/auth/login` on submit
-- [ ] On 200 → check `email_verified_at`; redirect to `/verify-email` or `/dashboard`
-- [ ] On 422 → show credentials error
-- [ ] On 403 → show account suspended message
-- [ ] On 429 → show rate limit message
+- [x] Same two-column layout
+- [x] Fields: email, password
+- [x] `POST /api/auth/login` on submit
+- [x] On 200 → check `email_verified_at`; redirect to `/verify-email` or `/dashboard`
+- [x] On 422 → show credentials error
+- [x] On 403 → show account suspended message
+- [x] On 429 → show rate limit message
 
 ### Verify Email — `/verify-email`
-- [ ] Static page — no API call
-- [ ] Tell user to check their inbox
-- [ ] Link back to `/login`
+- [x] Static page — no API call
+- [x] Tell user to check their inbox
+- [x] Link back to `/login`
 
 ### Forgot Password — `/forgot-password`
-- [ ] Field: email
-- [ ] `POST /api/auth/forgot-password`
-- [ ] Always show "If that email is registered, a reset link has been sent." regardless of response
+- [x] Field: email
+- [x] `POST /api/auth/forgot-password`
+- [x] Always show "If that email is registered, a reset link has been sent." regardless of response
 
 ### Reset Password — `/reset-password`
-- [ ] Parse `token` + `email` from query string
-- [ ] Fields: password, password_confirmation
-- [ ] `POST /api/auth/reset-password`
-- [ ] On 200 → redirect to `/login` with success message
-- [ ] On 422 → check `errors.token` for "invalid" → show "Link expired" message
+- [x] Parse `token` + `email` from query string
+- [x] Fields: password, password_confirmation
+- [x] `POST /api/auth/reset-password`
+- [x] On 200 → redirect to `/login` with success message
+- [x] On 422 → check `errors.token` for "invalid" → show "Link expired" message
 
 ---
 
