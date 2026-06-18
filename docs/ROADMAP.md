@@ -80,12 +80,12 @@ Public pages. No auth required.
 
 First authenticated page.
 
-- [ ] Call `GET /api/auth/me`, `GET /api/services`, `GET /api/invoices` in parallel on mount
-- [ ] Show skeleton loaders while loading (match card/row shapes)
-- [ ] Stat cards (1 col → sm:2 → lg:4): Total Services, Active Services, Unpaid Invoices, Overdue Invoices
-- [ ] Recent Services table (latest 5) with status badge + link to `/services/[id]`
-- [ ] Recent Invoices table (latest 5) with amount, due date, status badge + link to `/invoices/[id]`
-- [ ] Empty states when no data
+- [x] Call `GET /api/auth/me`, `GET /api/services`, `GET /api/invoices` in parallel on mount
+- [x] Show skeleton loaders while loading (match card/row shapes)
+- [x] Stat cards (1 col → sm:2 → lg:4): Total Services, Active Services, Unpaid Invoices, Overdue Invoices
+- [x] Recent Services table (latest 5) with status badge + link to `/services/[id]`
+- [x] Recent Invoices table (latest 5) with amount, due date, status badge + link to `/invoices/[id]`
+- [x] Empty states when no data
 
 ---
 
