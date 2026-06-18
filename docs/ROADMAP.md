@@ -8,18 +8,18 @@ Ordered by dependency. Each phase must be complete before the next begins.
 
 Set up everything that every page depends on before writing a single page.
 
-- [ ] Configure Tailwind v4 `@theme` with brand colour tokens in `globals.css`
-- [ ] Add `NEXT_PUBLIC_API_URL` to `.env.development` and `.env.production`
-- [ ] Create `lib/api.ts` — Axios instance with `withCredentials`, base URL, Accept/Content-Type headers
-- [ ] Create `lib/csrfStore.ts` — in-memory singleton that holds the XSRF token
-- [ ] Wire CSRF: on every response that sets cookies, read `XSRF-TOKEN` and save to store; on every mutating request, inject `X-XSRF-TOKEN` header from store
-- [ ] Add global 401 interceptor → redirect to `/login`
-- [ ] Add global 403 interceptor → check message, redirect to `/verify-email` or show suspension banner
-- [ ] Export `ApiError` type with `status`, `message`, `errors` fields
-- [ ] Create `types/index.ts` — `Client`, `Service`, `Invoice` TypeScript types
-- [ ] Create `contexts/AuthContext.tsx` — `client`, `setClient`, `logout` exported via `useAuth()`
-- [ ] Create utility functions: `fmtDate()`, `fmtCurrency()` (using `Intl`, no libraries)
-- [ ] Install Lucide React
+- [x] Configure Tailwind v4 `@theme` with brand colour tokens in `globals.css`
+- [x] Add `NEXT_PUBLIC_API_URL` to `.env.development` and `.env.production`
+- [x] Create `lib/api.ts` — Axios instance with `withCredentials`, base URL, Accept/Content-Type headers
+- [x] Create `lib/csrfStore.ts` — in-memory singleton that holds the XSRF token
+- [x] Wire CSRF: on every response that sets cookies, read `XSRF-TOKEN` and save to store; on every mutating request, inject `X-XSRF-TOKEN` header from store
+- [x] Add global 401 interceptor → redirect to `/login`
+- [x] Add global 403 interceptor → check message, redirect to `/verify-email` or show suspension banner
+- [x] Export `ApiError` type with `status`, `message`, `errors` fields
+- [x] Create `types/index.ts` — `Client`, `Service`, `Invoice` TypeScript types
+- [x] Create `contexts/AuthContext.tsx` — `client`, `setClient`, `logout` exported via `useAuth()`
+- [x] Create utility functions: `fmtDate()`, `fmtCurrency()` (using `Intl`, no libraries)
+- [x] Install Lucide React
 
 ---
 
