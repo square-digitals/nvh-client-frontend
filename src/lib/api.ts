@@ -18,6 +18,20 @@ export const api = axios.create({
   xsrfHeaderName: 'X-XSRF-TOKEN',
 })
 
+api.interceptors.request.use((config) => {
+  const method = (config.method ?? '').toUpperCase()
+  const mutating = ['POST', 'PUT', 'PATCH', 'DELETE'].includes(method)
+
+  if (mutating && typeof document !== 'undefined') {
+    const match = document.cookie.match(/(?:^|; )XSRF-TOKEN=([^;]*)/)
+    if (match) {
+      config.headers['X-XSRF-TOKEN'] = decodeURIComponent(match[1])
+    }
+  }
+
+  return config
+})
+
 api.interceptors.response.use(
   (response) => response,
   (error: AxiosError) => {
