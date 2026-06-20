@@ -365,10 +365,37 @@ https://npanel.newventureshosting.com/reset-password?token=abc123&email=alice%40
 The client must verify their email before they can access any service, invoice, or ticket endpoints. Unverified clients get **403** with `"message": "Your email address is not verified."` on those routes.
 
 **Implementation checklist:**
-- On register: redirect to `/verify-email` page telling the client to check their inbox.
-- On login: if `email_verified_at` is `null`, redirect to `/verify-email`.
-- On any 403 response from a protected route: check if it's a verification error and redirect accordingly.
-- The `/verify-email` page has a **Resend** button that calls `POST /api/auth/email/resend`.
+- On register: redirect to `/verify-email` (no params) so the user sees the "check your inbox" screen.
+- On login: if `email_verified_at` is `null`, redirect to `/verify-email` (no params).
+- On any 403 from a protected route: check if it's a verification error and redirect accordingly.
+- The email the user receives contains a link to `/verify-email?id=…&hash=…&expires=…&signature=…`. The frontend reads those params and calls the verify endpoint automatically on page load.
+
+### How the `/verify-email` page works
+
+The page has two modes, determined by whether the four query params (`id`, `hash`, `expires`, `signature`) are present in the URL:
+
+**Mode A — no params (user just registered or was redirected)**
+Shows "Check your inbox" with a **Resend** button.
+
+**Mode B — params present (user clicked the link in their email)**
+Fires `GET /api/auth/email/verify/{id}/{hash}?expires={expires}&signature={signature}` automatically on mount, then acts on the response.
+
+### Verify Email
+
+**GET** `/api/auth/email/verify/{id}/{hash}`
+
+Query params: `expires`, `signature` (both required — they are part of the signed URL).
+
+**No auth cookie or XSRF token required** — the URL signature is the proof of identity.
+
+**Responses**
+
+| Status | Body | Frontend action |
+|---|---|---|
+| 200 | `{ "message": "Email verified successfully." }` | Redirect to `/dashboard` |
+| 410 | `{ "message": "Verification link has expired." }` | Show "Link expired" state with Resend button |
+| 422 | `{ "message": "Email already verified." }` | Redirect to `/dashboard` |
+| 422 | `{ "message": "Invalid verification link." }` | Show "Invalid link" error state |
 
 ### Resend Verification Email
 
@@ -390,17 +417,10 @@ Re-queues the verification email for the currently authenticated (but unverified
 
 | Status | Body | Meaning |
 |---|---|---|
-| 200 | `{ "message": "Verification link sent." }` | Email queued successfully |
-| 422 | `{ "message": "Email already verified." }` | Client is already verified — redirect to login |
-| 401 | `{ "message": "Unauthenticated." }` | Not logged in — redirect to `/login` |
-| 429 | — | Rate limited (max 5 requests/min) — show cooldown message |
-
-**Frontend behaviour on the `/verify-email` page:**
-- Clicking "Resend verification email" fires this request.
-- Button is disabled while in-flight, after a successful send, and when rate-limited.
-- 422 → surface "Your email is already verified" with a link to `/login`.
-- 429 → surface "Too many requests. Please wait a minute before trying again."
-- 401 is handled globally by the Axios response interceptor (redirects to `/login`).
+| 200 | `{ "message": "Verification link sent." }` | Email queued — show success banner, disable button |
+| 422 | `{ "message": "Email already verified." }` | Show "already verified" banner with sign-in link |
+| 401 | `{ "message": "Unauthenticated." }` | Handled globally by Axios interceptor — redirects to `/login` |
+| 429 | — | Rate limited (max 5/min) — show cooldown message, disable button |
 
 ---
 
