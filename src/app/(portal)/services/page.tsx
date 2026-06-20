@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
-import { Plus, ChevronRight } from 'lucide-react'
+import { Plus, ChevronRight, RefreshCw } from 'lucide-react'
 import { api } from '@/lib/api'
 import type { Service, ServiceStatus } from '@/types'
 import { fmtDate } from '@/lib/utils'
@@ -35,6 +35,7 @@ export default function ServicesPage() {
   const [services, setServices] = useState<Service[]>([])
   const [tab, setTab] = useState<ServiceStatus | 'all'>('all')
   const [loading, setLoading] = useState(true)
+  const [refreshing, setRefreshing] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const pollTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
@@ -44,6 +45,12 @@ export default function ServicesPage() {
       .then((res) => setServices(res.data.services))
       .catch(() => { if (showLoading) setError('Failed to load services. Refresh to retry.') })
       .finally(() => { if (showLoading) setLoading(false) })
+  }
+
+  async function handleRefresh() {
+    setRefreshing(true)
+    await fetchServices()
+    setRefreshing(false)
   }
 
   useEffect(() => {
@@ -90,13 +97,23 @@ export default function ServicesPage() {
           ))}
         </div>
 
-        <Link
-          href="/services/new"
-          className="flex items-center gap-2 rounded-lg bg-brand-700 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-800"
-        >
-          <Plus className="h-4 w-4" />
-          Request Service
-        </Link>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleRefresh}
+            disabled={refreshing || loading}
+            title="Refresh"
+            className="flex items-center justify-center rounded-lg border border-slate-200 bg-white p-2.5 text-slate-500 transition-colors hover:bg-slate-50 hover:text-slate-700 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <RefreshCw className={`h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
+          </button>
+          <Link
+            href="/services/new"
+            className="flex items-center gap-2 rounded-lg bg-brand-700 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-800"
+          >
+            <Plus className="h-4 w-4" />
+            Request Service
+          </Link>
+        </div>
       </div>
 
       {/* Table */}

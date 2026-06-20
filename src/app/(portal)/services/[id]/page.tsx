@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, ExternalLink, Loader2 } from 'lucide-react'
+import { ArrowLeft, ExternalLink, Loader2, RefreshCw } from 'lucide-react'
 import { api } from '@/lib/api'
 import type { ApiError } from '@/lib/api'
 import type { Service } from '@/types'
@@ -29,6 +29,7 @@ export default function ServiceDetailPage() {
   const [service, setService] = useState<Service | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [refreshing, setRefreshing] = useState(false)
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [terminating, setTerminating] = useState(false)
   const [toast, setToast] = useState<{ type: 'success' | 'error'; msg: string } | null>(null)
@@ -48,12 +49,18 @@ export default function ServiceDetailPage() {
   }
 
   function refetch() {
-    api.get<{ service: Service }>(`/api/services/${id}`)
+    return api.get<{ service: Service }>(`/api/services/${id}`)
       .then((res) => {
         setService(res.data.service)
         scheduleNextPoll(res.data.service)
       })
       .catch(() => {/* silently stop on background errors */})
+  }
+
+  async function handleRefresh() {
+    setRefreshing(true)
+    await refetch()
+    setRefreshing(false)
   }
 
   useEffect(() => {
@@ -168,7 +175,17 @@ export default function ServiceDetailPage() {
               <h1 className="text-xl font-semibold text-slate-900">{service.name}</h1>
               <p className="mt-0.5 text-sm text-slate-500">{service.domain}</p>
             </div>
-            <StatusBadge status={service.status} />
+            <div className="flex items-center gap-2">
+              <button
+                onClick={handleRefresh}
+                disabled={refreshing}
+                title="Refresh status"
+                className="flex items-center justify-center rounded-lg border border-slate-200 bg-white p-1.5 text-slate-400 transition-colors hover:bg-slate-50 hover:text-slate-600 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <RefreshCw className={`h-3.5 w-3.5 ${refreshing ? 'animate-spin' : ''}`} />
+              </button>
+              <StatusBadge status={service.status} />
+            </div>
           </div>
 
           <dl className="space-y-4">
