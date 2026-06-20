@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { Plus, ChevronRight } from 'lucide-react'
 import { api } from '@/lib/api'
@@ -29,18 +29,38 @@ function TableRowSkeleton() {
   )
 }
 
+const POLL_MS = 30_000
+
 export default function ServicesPage() {
   const [services, setServices] = useState<Service[]>([])
   const [tab, setTab] = useState<ServiceStatus | 'all'>('all')
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const pollTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  function fetchServices(showLoading = false) {
+    if (showLoading) setLoading(true)
+    return api.get<{ services: Service[] }>('/api/services')
+      .then((res) => setServices(res.data.services))
+      .catch(() => { if (showLoading) setError('Failed to load services. Refresh to retry.') })
+      .finally(() => { if (showLoading) setLoading(false) })
+  }
 
   useEffect(() => {
-    api.get<{ services: Service[] }>('/api/services')
-      .then((res) => setServices(res.data.services))
-      .catch(() => setError('Failed to load services. Refresh to retry.'))
-      .finally(() => setLoading(false))
-  }, [])
+    fetchServices(true)
+
+    pollTimer.current = setInterval(() => fetchServices(), POLL_MS)
+
+    function onVisibilityChange() {
+      if (document.visibilityState === 'visible') fetchServices()
+    }
+    document.addEventListener('visibilitychange', onVisibilityChange)
+
+    return () => {
+      if (pollTimer.current) clearInterval(pollTimer.current)
+      document.removeEventListener('visibilitychange', onVisibilityChange)
+    }
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const filtered = tab === 'all' ? services : services.filter((s) => s.status === tab)
 
