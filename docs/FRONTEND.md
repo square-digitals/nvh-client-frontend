@@ -368,7 +368,39 @@ The client must verify their email before they can access any service, invoice, 
 - On register: redirect to `/verify-email` page telling the client to check their inbox.
 - On login: if `email_verified_at` is `null`, redirect to `/verify-email`.
 - On any 403 response from a protected route: check if it's a verification error and redirect accordingly.
-- The verification link is sent automatically on register. You do not need a "resend" endpoint at this stage.
+- The `/verify-email` page has a **Resend** button that calls `POST /api/auth/email/resend`.
+
+### Resend Verification Email
+
+**POST** `/api/auth/email/resend`
+
+Re-queues the verification email for the currently authenticated (but unverified) client.
+
+**Required headers**
+
+| Header | Value |
+|---|---|
+| `Accept` | `application/json` |
+| `Content-Type` | `application/json` |
+| `X-XSRF-TOKEN` | Value of the `XSRF-TOKEN` cookie |
+
+**Request body:** none.
+
+**Responses**
+
+| Status | Body | Meaning |
+|---|---|---|
+| 200 | `{ "message": "Verification link sent." }` | Email queued successfully |
+| 422 | `{ "message": "Email already verified." }` | Client is already verified — redirect to login |
+| 401 | `{ "message": "Unauthenticated." }` | Not logged in — redirect to `/login` |
+| 429 | — | Rate limited (max 5 requests/min) — show cooldown message |
+
+**Frontend behaviour on the `/verify-email` page:**
+- Clicking "Resend verification email" fires this request.
+- Button is disabled while in-flight, after a successful send, and when rate-limited.
+- 422 → surface "Your email is already verified" with a link to `/login`.
+- 429 → surface "Too many requests. Please wait a minute before trying again."
+- 401 is handled globally by the Axios response interceptor (redirects to `/login`).
 
 ---
 
