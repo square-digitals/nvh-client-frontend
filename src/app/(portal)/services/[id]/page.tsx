@@ -42,15 +42,18 @@ export default function ServiceDetailPage() {
   }
 
   function scheduleNextPoll(svc: Service) {
+    if (pollTimer.current) clearTimeout(pollTimer.current)
     if (TERMINAL.has(svc.status)) return
-    pollTimer.current = setTimeout(() => {
-      api.get<{ service: Service }>(`/api/services/${id}`)
-        .then((res) => {
-          setService(res.data.service)
-          scheduleNextPoll(res.data.service)
-        })
-        .catch(() => {/* silently stop polling on error */})
-    }, POLL_MS)
+    pollTimer.current = setTimeout(() => refetch(), POLL_MS)
+  }
+
+  function refetch() {
+    api.get<{ service: Service }>(`/api/services/${id}`)
+      .then((res) => {
+        setService(res.data.service)
+        scheduleNextPoll(res.data.service)
+      })
+      .catch(() => {/* silently stop on background errors */})
   }
 
   useEffect(() => {
@@ -64,9 +67,15 @@ export default function ServiceDetailPage() {
       })
       .finally(() => setLoading(false))
 
+    function onVisibilityChange() {
+      if (document.visibilityState === 'visible') refetch()
+    }
+    document.addEventListener('visibilitychange', onVisibilityChange)
+
     return () => {
       if (pollTimer.current) clearTimeout(pollTimer.current)
       if (toastTimer.current) clearTimeout(toastTimer.current)
+      document.removeEventListener('visibilitychange', onVisibilityChange)
     }
   }, [id]) // eslint-disable-line react-hooks/exhaustive-deps
 
