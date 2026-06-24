@@ -98,7 +98,7 @@ export default function BillingPage() {
               ) : (
                 filtered.map((inv) => (
                   <tr key={inv.id} className="transition-colors hover:bg-slate-50">
-                    <td className="px-6 py-3 font-mono text-xs text-slate-700">{inv.external_id}</td>
+                    <td className="px-6 py-3 font-mono text-xs text-slate-700">{inv.id}</td>
                     <td className="px-6 py-3 font-medium text-slate-900">
                       {fmtCurrency(inv.amount, inv.currency)}
                     </td>

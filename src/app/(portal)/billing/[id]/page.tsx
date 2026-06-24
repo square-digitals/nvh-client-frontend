@@ -75,7 +75,7 @@ export default function InvoiceDetailPage() {
             <h1 className="text-xl font-semibold text-slate-900">
               {fmtCurrency(invoice.amount, invoice.currency)}
             </h1>
-            <p className="mt-0.5 font-mono text-xs text-slate-500">{invoice.external_id}</p>
+            <p className="mt-0.5 font-mono text-xs text-slate-500">{invoice.id}</p>
           </div>
           <StatusBadge status={invoice.status} />
         </div>
