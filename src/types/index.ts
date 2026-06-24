@@ -27,7 +27,6 @@ export interface Service {
   status: ServiceStatus
   url: string | null
   failed_reason: string | null
-  admin_service_id: string | null
   provisioned_at: string | null
   synced_at: string | null
   created_at: string
@@ -39,7 +38,6 @@ export type InvoiceStatus = 'unpaid' | 'paid' | 'overdue' | 'void'
 export interface Invoice {
   id: string
   client_id: string
-  external_id: string
   amount: string
   currency: string
   status: InvoiceStatus
